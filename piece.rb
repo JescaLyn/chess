@@ -1,7 +1,7 @@
 require 'singleton'
 
 class Piece
-  attr_accessor :color, :position
+  attr_accessor :color, :position, :board
 
   def initialize(color, board, pos)
     @color = color
@@ -11,11 +11,26 @@ class Piece
 
   def moves
   end
+
+  def valid_moves
+    self.moves.reject do |move|
+      new_board = @board.dup
+      new_board.move(@position, move)
+      new_board.in_check?(@color)
+    end
+  end
+
+  def dup
+    self.class.new(@color, @board, @position.dup)
+  end
 end
 
 class NullPiece
   include Singleton
-  attr_reader :color
+
+  def color
+    nil
+  end
 
   def to_s
 

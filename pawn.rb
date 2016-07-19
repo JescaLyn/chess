@@ -11,17 +11,21 @@ class Pawn < Piece
   end
 
   def moves
-    (forward_dir + side_attacks).select { |move| @board.in_bounds?(move) }
+    forward_dir + side_attacks
   end
 
   def forward_dir
     moves = []
     x, y = @position
+    up_move = [x + 1, y]
+    down_move = [x - 1, y]
 
-    if @color == :black && @board.empty?([x + 1, y])
+    if @color == :black && @board.in_bounds?(up_move) &&
+      @board.empty?(up_move)
       moves << [x + 1, y]
       moves << [x + 2, y] if at_start_row?
-    elsif @color == :white && @board.empty?([x - 1, y])
+    elsif @color == :white && @board.in_bounds?(down_move) &&
+      @board.empty?(down_move)
       moves << [x - 1, y]
       moves << [x - 2, y] if at_start_row?
     end
@@ -49,6 +53,7 @@ class Pawn < Piece
   end
 
   def is_enemy?(pos)
+    return false unless @board.in_bounds?(pos)
     (@board[*pos].color == @color || @board.empty?(pos)) ? false : true
   end
 end

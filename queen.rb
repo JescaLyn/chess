@@ -1,6 +1,9 @@
 require_relative "sliding_piece"
+require_relative "piece"
 
-class Queen < SlidingPiece
+class Queen < Piece
+  include SlidingPiece
+  
   def to_s
     " #{"\u265b".encode('utf-8')} "
   end

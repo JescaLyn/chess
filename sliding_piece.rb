@@ -1,6 +1,6 @@
 require_relative "piece"
 
-class SlidingPiece < Piece
+module SlidingPiece
   DIAG_DELTA = [
     [1, 1],
     [1, -1],
@@ -16,9 +16,7 @@ class SlidingPiece < Piece
   ]
 
   def moves
-    poss_moves.select do |pos|
-      @board.in_bounds?(pos) && @board[*pos].color != @color
-    end
+    poss_moves.select { |pos| @board[*pos].color != @color }
   end
 
   def poss_moves
@@ -34,6 +32,7 @@ class SlidingPiece < Piece
         index = 1
         while index <= 7
           new_pos = [x + (change[0] * index), y + (change[1] * index)]
+          break unless @board.in_bounds?(new_pos)
           moves << new_pos
           break if self.is_a?(King)
           break unless @board.empty?(new_pos)

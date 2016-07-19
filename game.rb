@@ -2,6 +2,11 @@ require_relative "player"
 require_relative "board"
 require_relative "display"
 
+RubyVM::InstructionSequence.compile_option = {
+  :tailcall_optimization => true,
+  :trace_instruction => false
+}
+
 class Game
   def initialize
     @board = Board.new

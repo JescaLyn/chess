@@ -1,4 +1,5 @@
 require 'singleton'
+require 'byebug'
 
 class Piece
   attr_accessor :color, :position, :board
@@ -13,6 +14,7 @@ class Piece
   end
 
   def valid_moves
+    debugger
     self.moves.reject do |move|
       new_board = @board.dup
       new_board.move(@position, move)

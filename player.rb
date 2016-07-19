@@ -2,8 +2,10 @@ require_relative "display"
 require_relative "board"
 
 class Player
-  def initialize(board)
+  def initialize(board, color)
     @display = Display.new(board)
+    @board = board
+    @color == color
   end
 
   def move
@@ -14,10 +16,17 @@ class Player
     end
     result
   end
+
+  def make_move
+    start_pos = move
+    end_pos = move
+    @board.move(start_pos, end_pos)
+    @display.render
+  end
 end
 
 if $PROGRAM_NAME == __FILE__
   board = Board.new
   dude = Player.new(board)
-  dude.move
+  dude.make_move
 end

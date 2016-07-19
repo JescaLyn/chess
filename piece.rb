@@ -21,4 +21,8 @@ class NullPiece
 
     "   "
   end
+
+  def moves
+    []
+  end
 end

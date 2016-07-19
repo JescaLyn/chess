@@ -62,9 +62,11 @@ class Board
   end
 
   def move(start_pos, end_pos)
-    raise "Error!" unless self[*start_pos].moves.include?(end_pos)
+    p self[*start_pos].moves
+    raise "Not in valid moves!" unless self[*start_pos].moves.include?(end_pos)
     self[*start_pos], self[*end_pos] = self[*end_pos], self[*start_pos]
     self[*start_pos] = NullPiece.instance
+    self[*end_pos].position = end_pos
   end
 
   def in_bounds?(pos)
@@ -72,6 +74,7 @@ class Board
   end
 
   def empty?(pos)
+    return true unless self.in_bounds?(pos)
     self[*pos].is_a?(NullPiece)
   end
 end
@@ -83,7 +86,9 @@ if $PROGRAM_NAME == __FILE__
   #   row.each {|el| print "#{el.to_s}" }
   #   puts
   # end
-  slid = Knight.new(:black, board, [2, 2])
-  p slid.moves.count
-  p slid.moves
+  pawn = board[1, 5]
+  p pawn.moves
+  board[2,6] = Pawn.new(:white, board, [2, 6])
+  board[2,4] = Pawn.new(:white, board, [2, 6])
+  p pawn.moves
 end

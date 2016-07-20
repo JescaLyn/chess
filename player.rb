@@ -1,5 +1,6 @@
 require_relative "display"
 require_relative "board"
+require_relative "game_error"
 
 class Player
   attr_reader :color
@@ -10,7 +11,7 @@ class Player
     @color = color
   end
 
-  def move
+  def prompt
     result = nil
     until result
       @display.render
@@ -20,10 +21,20 @@ class Player
   end
 
   def make_move
-    #TODO: raise "Not in valid moves!" unless @board[*start_pos].moves.include?(end_pos)
-    start_pos = move
-    end_pos = move
+    start_pos = prompt
+    @display.selected = true
+    unless @board[*start_pos].color == @color
+      raise GameError, "That is not a piece you own."
+    end
+    end_pos = prompt
+    @display.selected = false
     @board.move(start_pos, end_pos)
+  rescue GameError => e
+    @display.selected = false
+    puts e
+    sleep(2)
+    retry
+  ensure
     @display.render
   end
 end

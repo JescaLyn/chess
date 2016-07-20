@@ -4,10 +4,12 @@ require_relative "board"
 
 class Display
   include Cursorable
+  attr_accessor :selected
 
   def initialize(board)
     @board = board
     @cursor_pos = [0, 0]
+    @selected = false
   end
 
   def build_grid
@@ -43,7 +45,11 @@ class Display
 
   def render
     system("clear")
-    puts "Where would you like to move?"
+    if @selected
+      puts "Where would you like to move that piece?"
+    else
+      puts "Pick a piece you want to move."
+    end
     puts "Arrow keys, WASD, or vim to move, space or enter to confirm."
     build_grid.each { |row| puts row.join }
   end

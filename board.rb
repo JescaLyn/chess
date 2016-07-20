@@ -4,6 +4,7 @@ require_relative "knight"
 require_relative "rook"
 require_relative "bishop"
 require_relative "pawn"
+require_relative "game_error"
 
 class Board
   attr_accessor :grid
@@ -67,7 +68,7 @@ class Board
   end
 
   def move(start_pos, end_pos)
-    raise "Not a valid move." unless valid_move?(start_pos, end_pos)
+    raise GameError, "Not a valid move." unless valid_move?(start_pos, end_pos)
     self[*start_pos], self[*end_pos] = self[*end_pos], self[*start_pos]
     self[*start_pos] = NullPiece.instance
     self[*end_pos].position = end_pos

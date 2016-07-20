@@ -45,6 +45,12 @@ class Pawn < Piece
       attacks << [x + 1, y - 1]
     end
 
+    if @position == [6, 7]
+      p attacks
+      p attacks.select { |move| is_enemy?(move) }
+      sleep(2)
+    end
+
     attacks.select { |move| is_enemy?(move) }
   end
 

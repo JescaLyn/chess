@@ -101,6 +101,8 @@ class Board
   def checkmate?(color)
     return false unless self.in_check?(color)
     all_pieces(color).each do |piece|
+      # p piece.moves if piece.position == [6, 7]
+      # sleep(2) if piece.position == [6, 7]
       piece.moves.each do |move|
         new_board = self.dup
         new_board.move!(piece.position, move)

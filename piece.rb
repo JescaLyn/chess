@@ -14,16 +14,11 @@ class Piece
   end
 
   def valid_moves
-    debugger
     self.moves.reject do |move|
       new_board = @board.dup
-      new_board.move(@position, move)
+      new_board.move!(@position, move)
       new_board.in_check?(@color)
     end
-  end
-
-  def dup
-    self.class.new(@color, @board, @position.dup)
   end
 end
 

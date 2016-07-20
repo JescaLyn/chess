@@ -2,16 +2,11 @@ require_relative "player"
 require_relative "board"
 require_relative "display"
 
-RubyVM::InstructionSequence.compile_option = {
-  :tailcall_optimization => true,
-  :trace_instruction => false
-}
-
 class Game
   def initialize
     @board = Board.new
-    @player1 = Player.new(@board, :white)
-    @player2 = Player.new(@board, :black)
+    @player1 = Player.new(@board, :black)
+    @player2 = Player.new(@board, :white)
     @current_player = @player1
   end
 
@@ -21,9 +16,10 @@ class Game
 
   def play
     won = false
-
     until won
       @current_player.make_move
+      switch_player!
+      won = true if @board.checkmate?(@current_player.color)
     end
 
     puts "Somebody won!"

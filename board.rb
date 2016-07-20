@@ -8,9 +8,9 @@ require_relative "pawn"
 class Board
   attr_accessor :grid
 
-  def initialize()
+  def initialize(fill_board = true)
     @grid = Array.new(8) { Array.new(8) }
-    self.populate
+    self.populate if fill_board
   end
 
   def populate
@@ -73,6 +73,12 @@ class Board
     self[*end_pos].position = end_pos
   end
 
+  def move!(start_pos, end_pos)
+    self[*start_pos], self[*end_pos] = self[*end_pos], self[*start_pos]
+    self[*start_pos] = NullPiece.instance
+    self[*end_pos].position = end_pos
+  end
+
   def in_bounds?(pos)
     pos.all? { |x| x.between?(0, 7) }
   end
@@ -91,6 +97,18 @@ class Board
     false
   end
 
+  def checkmate?(color)
+    return false unless self.in_check?(color)
+    all_pieces(color).each do |piece|
+      piece.moves.each do |move|
+        new_board = self.dup
+        new_board.move!(piece.position, move)
+        return false unless new_board.in_check?(color)
+      end
+    end
+    true
+  end
+
   def other_color(color)
     color == :black ? :white : :black
   end
@@ -101,13 +119,11 @@ class Board
   end
 
   def dup
-    new_board = Board.new
+    new_board = Board.new(false)
     pieces = all_pieces.reject { |piece| piece.is_a?(NullPiece) }
 
-    pieces.each_with_index do |piece, idx|
-      dup_piece = piece.dup
-      dup_piece.board = new_board
-      new_board[*dup_piece.position] = dup_piece
+    pieces.each do |piece|
+      new_board[*piece.position] = piece.class.new(piece.color, new_board, piece.position)
     end
 
     new_board.grid.each_with_index do |row, row_idx|
@@ -124,4 +140,10 @@ end
 if $PROGRAM_NAME == __FILE__
   board = Board.new
   board.populate
+  king = board[0, 4]
+  board[1, 4] = NullPiece.instance
+  board[3, 5] = Queen.new(:white, board, [3, 5])
+  # p king.valid_moves
+  board.move([0, 4], [1, 4])
+  king.valid_moves
 end
